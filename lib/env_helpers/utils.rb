@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 module EnvHelpers
+  # Utility methods
   class Utils
     class << self
       # Check if a value represents a boolean

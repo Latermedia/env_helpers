@@ -57,7 +57,7 @@ PLATFORMS
 
 DEPENDENCIES
   bundler (~> 1.16)
-  bundler-audit (~> 0.5)
+  bundler-audit
   climate_control (~> 0.2)
   env_helpers!
   pry

@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
-rspec spec --tag ~ext:true --tag ~override:true
-rspec spec --tag ext:true
-rspec spec --tag override:true
+bundle exec rspec spec --tag ~ext:true --tag ~override:true
+bundle exec rspec spec --tag ext:true
+bundle exec rspec spec --tag override:true

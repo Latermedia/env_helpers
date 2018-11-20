@@ -26,6 +26,8 @@ Or install it yourself as:
 
 ## Usage
 
+You can find the on [rubdoc.info](https://www.rubydoc.info/github/Latermedia/env_helpers/master).
+
 ### Methods
 
 `EnvHelpers` supplies the following helper methods:
@@ -40,7 +42,7 @@ Or install it yourself as:
 -   `false?`
 
 ```ruby
-require `env_helpers/ext/env`
+require `env_helpers`
 
 EnvHelpers.int('TEST_INT')
 ```
@@ -103,7 +105,7 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Tests
 
-Since parts of the functionality is optional and modifies other classes and objects, the specs aren't meant to be run all at the same time. This is to oisolate the environment the tests are executing in.
+Since parts of the functionality is optional and modifies other classes and objects, the specs aren't meant to be run all at the same time. This is to isolate the environment the tests are executing in.
 
 To run the tests:
 
@@ -111,9 +113,15 @@ To run the tests:
 ./run_specs
 ```
 
+Tests are currently run against the following Ruby version:
+- 2.5
+- 2.4
+- 2.3
+- 2.2
+
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/env_helpers. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+Bug reports and pull requests are welcome on GitHub at https://github.com/Latermedia/env_helpers. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
 
 ## License
 
@@ -121,4 +129,4 @@ The gem is available as open source under the terms of the [MIT License](https:/
 
 ## Code of Conduct
 
-Everyone interacting in the EnvHelpers project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/env_helpers/blob/master/CODE_OF_CONDUCT.md).
+Everyone interacting in the EnvHelpers project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/Latermedia/env_helpers/blob/master/CODE_OF_CONDUCT.md).

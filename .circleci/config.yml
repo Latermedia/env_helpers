@@ -1,0 +1,162 @@
+# Ruby CircleCI 2.0 configuration file
+#
+# Check https://circleci.com/docs/2.0/language-ruby/ for more details
+#
+version: 2
+
+spec_shared: &spec_shared
+  working_directory: ~/env_helpers
+  steps:
+    - checkout
+
+    - run:
+        name: install dependencies
+        command: |
+          bundle check --path vendor/bundle || bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+    - run:
+        name: Make test-results
+        command: |
+          mkdir /tmp/test-results
+
+    - run:
+        name: Run basic specs
+        command: |
+          bundle exec rspec --format progress \
+                          --format RspecJunitFormatter \
+                          --out /tmp/test-results/rspec-basic.xml \
+                          --format progress \
+                          spec --tag ~ext:true --tag ~override:true
+    - run:
+        name: Run extended ENV specs
+        command: |
+          bundle exec rspec --format progress \
+                          --format RspecJunitFormatter \
+                          --out /tmp/test-results/rspec-ext.xml \
+                          --format progress \
+                          spec --tag ext:true
+
+    - run:
+        name: Run boolean override specs
+        command: |
+          bundle exec rspec --format progress \
+                          --format RspecJunitFormatter \
+                          --out /tmp/test-results/rspec-override.xml \
+                          --format progress \
+                          spec --tag override:true
+
+    # collect reports
+    - store_test_results:
+        path: /tmp/test-results
+    - store_artifacts:
+        path: /tmp/test-results
+        destination: test-results
+
+jobs:
+  deps:
+    docker:
+      - image: circleci/ruby:2.5
+    working_directory: ~/env_helpers
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "env_helpers.gemspec" }}
+
+      - run:
+          name: install dependencies
+          command: |
+            bundle check --path vendor/bundle || bundle install --jobs=4 --retry=3 --path vendor/bundle
+
+      - save_cache:
+          paths:
+            - vendor/bundle
+          key: v1-dependencies-{{ checksum "env_helpers.gemspec" }}
+
+      - run:
+          name: dependencies security audit
+          command: |
+            bundle exec bundle-audit check --update
+
+      - run:
+          name: Rubocop
+          command: bundle exec rubocop
+
+  ruby-2.5:
+    <<: *spec_shared
+    docker:
+      - image: circleci/ruby:2.5
+
+  ruby-2.4:
+    <<: *spec_shared
+    docker:
+      - image: circleci/ruby:2.4
+
+  ruby-2.3:
+    <<: *spec_shared
+    docker:
+      - image: circleci/ruby:2.3
+
+  ruby-2.2:
+    <<: *spec_shared
+    docker:
+      - image: circleci/ruby:2.2
+
+  generate_docs:
+    docker:
+      - image: circleci/ruby:2.5
+    working_directory: ~/env_helpers
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          keys:
+            - v1-dependencies-{{ checksum "env_helpers.gemspec" }}
+
+      - run:
+          name: Setup bundler path
+          command: |
+            bundle check --path vendor/bundle
+
+      - run:
+          name: Generate Yard docs
+          command: |
+            bundle exec yard --output-dir /tmp/workspace/docs/yard
+
+      - run:
+          name: Num Docs
+          command: |
+            ls -al /tmp/workspace/docs/yard | wc -l
+
+      - persist_to_workspace:
+          root: /tmp/workspace/docs
+          paths:
+            - yard
+
+workflows:
+  version: 2
+  build:
+    jobs:
+      - deps
+      - ruby-2.5:
+          requires:
+            - deps
+      - ruby-2.4:
+          requires:
+            - deps
+      - ruby-2.3:
+          requires:
+            - deps
+      - ruby-2.2:
+          requires:
+            - deps
+      - generate_docs:
+          requires:
+            - ruby-2.5
+            - ruby-2.4
+            - ruby-2.3
+            - ruby-2.2

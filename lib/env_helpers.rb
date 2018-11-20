@@ -5,6 +5,7 @@ require 'json'
 require 'env_helpers/version'
 require 'env_helpers/utils'
 
+# Helper methods to improve ENV functionality
 module EnvHelpers
   class << self
     attr_accessor :rescue_json
