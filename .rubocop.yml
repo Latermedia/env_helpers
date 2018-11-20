@@ -1,0 +1,11 @@
+AllCops:
+  TargetRubyVersion: 2.5.1
+
+Metrics:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 99
+  Exclude:
+    - "spec/**/*"
+    - "*.gemspec"
